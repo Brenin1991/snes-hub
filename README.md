@@ -6,21 +6,14 @@ A complete SNES launcher developed with React, Electron, and Node.js, offering a
 
 ## Screenshots
 
-<p align="center">
-  <img src="img/01.png" alt="Dashboard View" width="800">
-</p>
-
-<p align="center">
-  <img src="img/02.png" alt="Game Library" width="800">
-</p>
-
-<p align="center">
-  <img src="img/03.png" alt="Game Details" width="800">
-</p>
-
-<p align="center">
-  <img src="img/04.png" alt="Emulator View" width="800">
-</p>
+<div align="center">
+  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 1000px; margin: 0 auto;">
+    <img src="img/01.png" alt="Dashboard View" width="100%">
+    <img src="img/02.png" alt="Game Library" width="100%">
+    <img src="img/03.png" alt="Game Details" width="100%">
+    <img src="img/04.png" alt="Emulator View" width="100%">
+  </div>
+</div>
 
 ### **Main Features**
 - **Intuitive Dashboard**: Modern interface with statistics and quick access to games
@@ -157,7 +150,7 @@ snes-launcher/
 - **Scroll**: Navigate the library
 - **Hover**: View additional information
 
-## ⚙️ Advanced Settings
+## Advanced Settings
 
 ### Emulator
 - **Core**: Snes9x or bsnes
@@ -177,7 +170,7 @@ snes-launcher/
 - **Updates**: Automatic
 - **Minimize**: To system tray
 
-## 🔧 Development
+## Development
 
 ### Available Scripts
 ```bash
