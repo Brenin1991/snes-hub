@@ -101,7 +101,7 @@ snes-launcher/
 └── README.md             # This file
 ```
 
-## 🎮 How to Use
+## How to Use
 
 ### 1. **Dashboard**
 - View your game statistics
@@ -207,12 +207,10 @@ npm run install-all
 
 ## Future Features
 
-- [ ] Support for more systems (NES, GBA, etc.)
 - [ ] Achievement system
 - [ ] Multiplayer mode
 - [ ] Cloud save
 - [ ] Customizable themes
-- [ ] Third-party plugins
 
 ## Contributing
 
