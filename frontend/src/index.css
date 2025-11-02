@@ -1,0 +1,150 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Press Start 2P', monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f0f0f0;
+  min-height: 100vh;
+  color: #000;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  overflow-x: hidden;
+}
+
+.snes-cartridge {
+  width: 300px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  outline: none;
+  box-shadow: none;
+  background-image: url('images/cartucho.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+}
+
+code {
+  font-family: 'Press Start 2P', monospace;
+}
+
+#root {
+  min-height: 100vh;
+  background: #f0f0f0;
+}
+
+/* Importar fonte SNES */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* Scrollbar estilo SNES */
+::-webkit-scrollbar {
+  width: 16px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border: 2px solid #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #000;
+  border: 2px solid #f0f0f0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #333;
+}
+
+/* Classes de background customizadas */
+.snes-container.has-white-bg {
+  background-color: #fff;
+}
+
+.snes-container.has-red-bg {
+  background-color: #ff6b6b;
+}
+
+.snes-container.has-yellow-bg {
+  background-color: #ffd93d;
+}
+
+.snes-container.has-blue-bg {
+  background-color: #4dabf7;
+}
+
+.snes-container.has-green-bg {
+  background-color: #51cf66;
+}
+
+.snes-container.has-orange-bg {
+  background-color: #ff922b;
+}
+
+.snes-container.has-purple-bg {
+  background-color: #9775fa;
+}
+
+.snes-container.has-pink-bg {
+  background-color: #f783ac;
+}
+
+.snes-container.has-gray-bg {
+  background-color: #e9ecef;
+}
+
+.snes-container.has-cyan-bg {
+  background-color: #22d3ee;
+}
+
+.snes-container.has-lime-bg {
+  background-color: #a9e34b;
+}
+
+.snes-container.has-indigo-bg {
+  background-color: #5c7cfa;
+}
+
+.snes-container.has-teal-bg {
+  background-color: #20c997;
+}
+
+.snes-container.has-rose-bg {
+  background-color: #ff8cc8;
+}
+
+.snes-container.has-violet-bg {
+  background-color: #b197fc;
+}
+
+.snes-container.has-emerald-bg {
+  background-color: #51cf66;
+}
+
+.snes-container.has-amber-bg {
+  background-color: #ffd43b;
+}
+
+.snes-container.has-sky-bg {
+  background-color: #74c0fc;
+}
+
+.snes-container.has-fuchsia-bg {
+  background-color: #e64980;
+}
+
+/* Classes de texto customizadas */
+.text-red-color {
+  color: #ff6b6b;
+}
+
+.text-black {
+  color: #000;
+}

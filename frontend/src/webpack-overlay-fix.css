@@ -1,0 +1,14 @@
+/* Esconder overlay do webpack-dev-server que atrapalha o emulador */
+#webpack-dev-server-client-overlay {
+  display: none !important;
+}
+
+/* Esconder também o iframe do webpack */
+iframe#webpack-dev-server-client-overlay {
+  display: none !important;
+}
+
+/* Garantir que o modal do emulador tenha prioridade */
+[data-emulator-modal] {
+  z-index: 99999 !important;
+}

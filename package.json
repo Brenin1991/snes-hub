@@ -1,0 +1,17 @@
+{
+  "name": "snes-launcher-complete",
+  "version": "1.0.0",
+  "description": "SNES Launcher completo com React/Electron e Backend",
+  "scripts": {
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && npm install && npm run dev",
+    "frontend": "cd frontend && npm install && npm run electron-dev",
+    "build": "cd frontend && npm run build",
+    "start": "concurrently \"npm run backend\" \"npm run frontend-start\"",
+    "frontend-start": "cd frontend && npm run electron",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}

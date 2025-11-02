@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNES Emulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Press Start 2P', monospace;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #emulator {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .loading-text {
+            font-size: 16px;
+            color: #fff;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #333;
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+        
+        .error-text {
+            font-size: 14px;
+            color: #ff6b6b;
+        }
+        
+        .retry-btn {
+            padding: 10px 20px;
+            background: #333;
+            color: #fff;
+            border: 2px solid #fff;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .retry-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div id="emulator"></div>
+    
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Carregando Emulador...</div>
+    </div>
+    
+    <div id="error" class="error" style="display: none;">
+        <div class="error-text">Erro ao carregar o emulador</div>
+        <button class="retry-btn" onclick="location.reload()">Tentar Novamente</button>
+    </div>
+
+    <script>
+        // Comunicação com o iframe pai
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'LOAD_GAME') {
+                loadGame(event.data.game);
+            } else if (event.data.type === 'PAUSE_GAME') {
+                pauseGame();
+            } else if (event.data.type === 'RESUME_GAME') {
+                resumeGame();
+            } else if (event.data.type === 'STOP_GAME') {
+                stopGame();
+            }
+        });
+        
+        let currentGame = null;
+        let isPlaying = false;
+        
+        function loadGame(game) {
+            currentGame = game;
+            console.log('Carregando jogo no iframe:', game.name);
+            
+            // Limpar emulador anterior
+            const emulatorDiv = document.getElementById('emulator');
+            emulatorDiv.innerHTML = '';
+            
+            // Mostrar loading
+            document.getElementById('loading').style.display = 'flex';
+            document.getElementById('error').style.display = 'none';
+            
+            // Carregar EmulatorJS
+            loadEmulatorJS(game);
+        }
+        
+        function loadEmulatorJS(game) {
+            try {
+                // Limpar instância anterior
+                if (window.EJS_emulator) {
+                    try {
+                        if (typeof window.EJS_emulator.destroy === 'function') {
+                            window.EJS_emulator.destroy();
+                        }
+                    } catch (e) {
+                        console.log('Emulador anterior já foi limpo');
+                    }
+                }
+                
+                // Limpar variáveis globais
+                delete window.EJS_player;
+                delete window.EJS_core;
+                delete window.EJS_lightgun;
+                delete window.EJS_biosUrl;
+                delete window.EJS_gameUrl;
+                delete window.EJS_pathtodata;
+                delete window.EJS_emulator;
+                
+                // Limpar script anterior
+                const existingScript = document.querySelector('script[src*="loader.js"]');
+                if (existingScript) {
+                    existingScript.remove();
+                }
+                
+                // Configurar EmulatorJS
+                window.EJS_player = '#emulator';
+                window.EJS_core = 'snes';
+                window.EJS_lightgun = false;
+                window.EJS_biosUrl = '';
+                window.EJS_gameUrl = `http://localhost:3001/uploads/roms/${game.rom_path}`;
+                window.EJS_pathtodata = 'https://cdn.jsdelivr.net/gh/EmulatorJS/EmulatorJS@main/data/';
+                
+                // Carregar script do EmulatorJS
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/gh/EmulatorJS/EmulatorJS@main/data/loader.js';
+                script.onload = () => {
+                    console.log('EmulatorJS carregado com sucesso');
+                    document.getElementById('loading').style.display = 'none';
+                    isPlaying = true;
+                    
+                    // Notificar o pai que o jogo foi carregado
+                    window.parent.postMessage({
+                        type: 'GAME_LOADED',
+                        game: game
+                    }, '*');
+                };
+                script.onerror = () => {
+                    console.error('Erro ao carregar EmulatorJS');
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('error').style.display = 'flex';
+                };
+                document.head.appendChild(script);
+                
+            } catch (error) {
+                console.error('Erro ao inicializar emulador:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'flex';
+            }
+        }
+        
+        function pauseGame() {
+            if (window.EJS_emulator && typeof window.EJS_emulator.pause === 'function') {
+                window.EJS_emulator.pause();
+                isPlaying = false;
+            }
+        }
+        
+        function resumeGame() {
+            if (window.EJS_emulator && typeof window.EJS_emulator.resume === 'function') {
+                window.EJS_emulator.resume();
+                isPlaying = true;
+            }
+        }
+        
+        function stopGame() {
+            if (window.EJS_emulator) {
+                try {
+                    if (typeof window.EJS_emulator.pause === 'function') {
+                        window.EJS_emulator.pause();
+                    }
+                    if (typeof window.EJS_emulator.destroy === 'function') {
+                        window.EJS_emulator.destroy();
+                    }
+                } catch (e) {
+                    console.log('Erro ao parar emulador:', e);
+                }
+            }
+            
+            // Limpar variáveis globais
+            delete window.EJS_player;
+            delete window.EJS_core;
+            delete window.EJS_lightgun;
+            delete window.EJS_biosUrl;
+            delete window.EJS_gameUrl;
+            delete window.EJS_pathtodata;
+            delete window.EJS_emulator;
+            
+            // Limpar div do emulador
+            const emulatorDiv = document.getElementById('emulator');
+            emulatorDiv.innerHTML = '';
+            
+            isPlaying = false;
+            currentGame = null;
+        }
+        
+        // Notificar o pai que o iframe está pronto
+        window.parent.postMessage({
+            type: 'IFRAME_READY'
+        }, '*');
+    </script>
+</body>
+</html>
